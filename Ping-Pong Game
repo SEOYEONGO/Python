@@ -1,0 +1,59 @@
+'''
+Ping-Pong Game
+'''
+
+from tkinter import *
+from time import*
+
+locX, locY=0,0
+w, h = 600,400
+dx, dy = 5,5
+
+
+def setLoc(event):          #마우스가 클릭된 위치를 받고 패드를 그 위치로 옮김.
+    locX=c.canvasx(event.x)
+    locY= c.canvasy(event.y)
+    c.move(paddle, locX-pp[0],0)
+
+def speed():                        #속도 조절
+	if radVar.get()==1:
+		speed(0.02)
+	if radVar.get()==2:
+		speed(0.08)
+	if radVar.get()==3:
+		speed(0.15)
+		
+window=Tk()
+label=Label(window, padx=10, text="Ping-Pong Game")
+label.pack(side="top") 
+window.geometry("600x400")
+
+c=Canvas(window, width=w, height=h, bg="green")
+c.pack(expand=YES, fill=BOTH)
+c.bind("<B1-Motion>", setLoc)
+
+radVar=IntVar()
+Label (window, text="난이도를 선택하시오.",justify=LEFT, padx=20).pack()
+Radiobutton(window, text="easy",padx=20,variable=radVar, value=1).pack(side=TOP)
+Radiobutton(window, text="medium",padx=20,variable=radVar, value=2).pack(side=TOP)
+Radiobutton(window, text="hard",padx=20,variable=radVar, value=3).pack(side=TOP)
+speed()
+		
+ball=c.create_oval(10,10, 50,50, fill="orange")
+paddle=c.create_rectangle(0,h-20,100,h, fill="red")
+
+while True:
+    c.move(ball, dx,dy)                 #공을 움직임
+    p=c.coords(ball)
+    pp= c.coords(paddle)
+    
+    if p[0]<0 or p[2]>w:
+        dx=-dx
+    if p[1]<0 or p[3]>(h-19):
+        dy=-dy
+        
+    
+  #난이도 선택 (라디오 버튼 .랩) (dx증가 시키거나 속도를 빠르게 함)
+    window.update()
+    sleep(0.05)
+window.mainloop()
